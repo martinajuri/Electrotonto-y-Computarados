@@ -6,61 +6,55 @@
 
 * Paso 1: Creación de perfiles habilitada durante la compilación.
 
-![alt text](Paso1.png)
+![alt text](Images/Paso1.png)
 
 * Paso 2: Ejecución del código.
 
-![alt text](Paso2.png)
-
+![alt text](Images/Paso2.png)
 * Paso 3: Ejecución de la herramienta gprof.
 
-![alt text](Paso3_1.png)
+![alt text](Images/Paso3_1.png)
 
 - Archivo analysis.txt sin flags.
 
-![alt text](Paso3_2.png)
-
+![alt text](Images/Paso3_2.png)
 - Archivo analysis.txt suprimiendo la impresion de funciones estáticas.
 
-![alt text](Paso3_3.png)
+![alt text](Images/Paso3_3.png)
 
 - Archivo analysis.txt sin textos detallados.
 
-![alt text](Paso3_4.png)
-
+![alt text](Images/Paso3_4.png)
 - Archivo analysis.txt imprimiendo solo el perfil plano.
 
-![alt text](Paso3_5.png)
+![alt text](Images/Paso3_5.png)
 
 - Archivo analysis.txt imprimiendo informacion relacionada unicamente con func1.
 
-![alt text](Paso3_6.png)
-
+![alt text](Images/Paso3_6.png)
 ## Generación de un gráfico con los datos
 
 - Instalación de gprof2dot y graphviz.
 
-![alt text](Paso4.png)
+![alt text](Images/Paso4.png)
 
 - Comandos utilizados
 
-![alt text](Paso4_2.png)
-
+![alt text](Images/Paso4_2.png)
 - Grafico resultante de **gprof2dot**
 
-![alt text](grafo.png)
+![alt text](Images/grafo.png)
 
 
 ### Profiling con linux perf
 
 - Ejecución del comando *"sudo perf record"*
 
-![alt text](profiling.png)
+![alt text](Images/profiling.png)
 
 - Reporte de la ejecución
 
-![alt text](reporte.png)
-
+![alt text](Images/reporte.png)
 ## Conclusiones del uso del tiempo de las funciones
 
 A partir del análisis realizado con las herramientas empleadas **gprof**, **gprof2dot** y **perf**, se observa como se distribuye el tiempo de ejecución entre las distintas funciones del programa. 
