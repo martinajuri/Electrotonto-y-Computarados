@@ -1,4 +1,88 @@
+# Introducción
+
+En el siguiente trabajo, se busca:
+
+Evaluar el rendimiento de distintos procesadores.
+Aplicar conceptos de benchmarking y análisis de performance.
+Comprender qué tipos de pruebas son más útiles según el uso real de una computadora.
+
+Para ello, se analizó el rendimiento de los siguientes procesadores:
+
+- Intel Core i5-13600K
+- AMD Ryzen 9 5900X
+- AMD Ryzen 9 7950X
+
+Se utilizó como referencia el benchmark de compilación del kernel de Linux disponible en OpenBenchmarking.org.
 ## Parte 1: Uso de benchmarks de terceros para tomar decisiones de hardware
+Los benchmarks permiten medir el rendimiento de un sistema y se clasifican en:
+
+- Benchmarks sintéticos
+  - Tests controlados.
+  - Permiten comparar hardware de forma objetiva.
+  - Ejemplo: Cinebench, Geekbench
+- Benchmarks reales
+  - Simulan uso cotidiano.
+  - Reflejan mejor la experiencia del usuario.
+
+Benchmarks según el componente
+- CPU: cálculo y multitarea → Cinebench, Geekbench
+- GPU: gráficos → 3DMark
+- RAM: latencia y velocidad → MemTest86
+- Disco: lectura/escritura → CrystalDiskMark
+- Red: latencia/ancho de banda → iPerf
+
+### Benchmarks útiles:
+Para una persona que estudia computación, los benchmarks más útiles serían:
+
+- Compilación de código (muy importante)
+- Rendimiento en multitarea
+- Acceso a disco (builds, bases de datos)
+- Red (cliente-servidor)
+Tareas diarias vs Benchmark representativo
+
+| Tarea diaria                                            | Benchmark representativo             |
+| ------------------------------------------------------- | ------------------------------------ |
+| Compilar proyectos (C/C++, Java)                        | Compilación del kernel de Linux      |
+| Ejecutar múltiples procesos (cliente-servidor, threads) | Cinebench (multi-core)               |
+| Manejo de bases de datos                                | Benchmark de disco (CrystalDiskMark) |
+| Programación con sockets/red                            | iPerf                                |
+| Uso de máquina virtual (Linux en VirtualBox)            | Benchmark de CPU + memoria           |
+| Desarrollo con Docker                                   | Benchmark de CPU + disco             |
+
+### Benchmark: Compilación del Kernel de Linux
+Se analiza el test: https://openbenchmarking.org/test/pts/build-linux-kernel-1.15.0
+Resultados:
+| Procesador    | Núcleos/Hilos | Tiempo |
+| ------------- | ------------- | ------ |
+| Ryzen 9 7950X | 16 / 32       | 53 s   |
+| Ryzen 9 5900X | 12 / 24       | 97 s   |
+| i5-13600K     | 14 / 20       | 83 s   |
+
+*Cálculo de rendimiento*
+
+Se define: Rendimeinto = 1/tiempo
+| Procesador | Rendimiento |
+| ---------- | ----------- |
+| 7950X      | 0.018       |
+| 5900X      | 0.010       |
+| i5-13600K  | 0.012       |
+
+*Aceleración*
+
+Tomando como referencia el Ryzen 9 7950X:
+
+- Frente al 5900X: 97/53=1.83x
+- Frente al i5-13600K: 83/53=1.56x
+Esto significa que el 7950X compila el kernel hasta 83% más rápido que el 5900X.
+
+Análisis
+El AMD Ryzen 9 7950X es el más rápido gracias a:
+- Mayor cantidad de núcleos
+- Mejor paralelismo
+El Intel Core i5-13600K tiene buen rendimiento, pero queda en el medio.
+El AMD Ryzen 9 5900X es el más lento en este test.
+
+
 
 ## Parte 2: Benchmark del codigo expuesto en "time profiling"
 
