@@ -13,7 +13,7 @@ Para ello, se analizó el rendimiento de los siguientes procesadores:
 - AMD Ryzen 9 7950X
 
 Se utilizó como referencia el benchmark de compilación del kernel de Linux disponible en OpenBenchmarking.org.
-## Parte 1: Uso de benchmarks de terceros para tomar decisiones de hardware
+## Parte 1.1: Uso de benchmarks de terceros para tomar decisiones de hardware
 Los benchmarks permiten medir el rendimiento de un sistema y se clasifican en:
 
 - Benchmarks sintéticos
@@ -83,7 +83,17 @@ El AMD Ryzen 9 7950X es el más rápido gracias a:
 El Intel Core i5-13600K tiene buen rendimiento, pero queda en el medio.
 El AMD Ryzen 9 5900X es el más lento en este test.
 
+## Parte 1.2: Práctico
+Se propone analizar el comportamiento de un microcontrolador que admita cambios en su frecuencia de clock del core. Para ello se utiliza un Arduino Uno R3 que cuenta con una fcclk de 16MHz por defecto, la cual se puede modificar utilizando un prescaler.
 
+Se pone a trabajar al mismo a una frecuencia inicialmente de 8MHz para que realice una tarea (suma de enteros y floats). Al cumplir la tarea imprime el tiempo transcurrido el la terminal serie del IDE de Arduino. Posteriormente se modifica el código para variar la fcclk y se exponen los siguientes resultados:
+
+![alt text](Images/Practico_Arduino.png)
+
+Como era de esperarse el tiempo en que el microprocesador demora en realizar una tarea es inversamente proporcional a la frecuencia del mismo.
+Se adjunta el código de ejemplo:
+
+[text](Practico_Arduino.ino)
 
 ## Parte 2: Benchmark del codigo expuesto en "time profiling"
 
