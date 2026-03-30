@@ -48,6 +48,7 @@ Tareas diarias vs Benchmark representativo
 | Programación con sockets/red                            | iPerf                                |
 | Uso de máquina virtual (Linux en VirtualBox)            | Benchmark de CPU + memoria           |
 | Desarrollo con Docker                                   | Benchmark de CPU + disco             |
+| Simulaciones matemáticas con Matlab                                  | Benchmark de CPU + disco             |
 
 ### Benchmark: Compilación del Kernel de Linux
 Se analiza el test: https://openbenchmarking.org/test/pts/build-linux-kernel-1.15.0
