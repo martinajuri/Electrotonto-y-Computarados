@@ -1,7 +1,12 @@
 # Informe del Proyecto TP3: Modo Protegido
 
 **Materia:** Sistemas de Computación
-**Alumna:** Martina Juri
+**Alumnos:** 
+- Martina Juri
+- Marcos Morán
+- Francisco Gomez Neimann
+- Cristian Arteaga
+
 **Trabajo Práctico:** TP3 – Modo Protegido x86
 
 ---
