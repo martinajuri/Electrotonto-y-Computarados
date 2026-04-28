@@ -8,6 +8,9 @@
 - Francisco Gomez Neimann
 - Cristian Eduardo Arteaga Barrera
 
+**Vínculo al repositorio:** 
+https://github.com/MMoran2001/Electrotonto-y-Computarados
+
 ---
 
 ## Introducción
