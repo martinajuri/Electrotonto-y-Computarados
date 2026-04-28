@@ -571,7 +571,7 @@ Se inspeccionó la dirección `0x00100000` mediante el monitor de QEMU:
 x /4xw 0x00100000
 ```
 
-![Captura: salida del comando x /4xw 0x00100000 mostrando todos ceros](ImagenesBootloader/memoria_ceros.png)
+![Captura: salida del comando x /4xw 0x00100000 mostrando todos ceros](ImagenesBootloader/3_verificacion_celda_bloqueada.png)
 
 ```
 00100000: 0x00000000 0x00000000 0x00000000 0x00000000
