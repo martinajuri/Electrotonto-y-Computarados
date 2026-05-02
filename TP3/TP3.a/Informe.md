@@ -250,16 +250,12 @@ sudo mkdir -p /mnt/EFI/BOOT
 sudo cp aplicacion.efi /mnt/
 ```
 
-📸 *[Insertar capturas]*
-
 ---
 
 ### 5.2 Configuración del firmware
 
 * Secure Boot: Disabled
 * Modo: UEFI Only
-
-📸 *[Insertar capturas BIOS]*
 
 ---
 
@@ -271,7 +267,7 @@ ls
 aplicacion.efi
 ```
 
-📸 *[Insertar captura final]*
+![alt text](Imagenes_aplicacion/ejecucion_aplicacion.png)
 
 ---
 
