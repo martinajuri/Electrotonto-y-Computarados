@@ -53,7 +53,7 @@ Se ejecutó QEMU con firmware UEFI:
 ```bash
 qemu-system-x86_64 -m 512 -bios /usr/share/ovmf/OVMF.fd -net none
 ```
-!["inicio de shell"](Imagenes_Shell/ShellIniciada.png)
+!["inicio de shell"](Imagenes_Shell/shellIniciada.png)
 
 
 ---
@@ -69,7 +69,12 @@ ls
 dh -b
 ```
 
-📸 *[Insertar capturas de map y dh]*
+
+![Captura de pantalla del comando map](Imagenes_Shell/map_shell.png)
+<p style="text-align: center;">Captura de pantalla del comando map</p>
+
+![alt text](Imagenes_Shell/handle_dump.png)
+<p style="text-align: center;">Captura de pantalla del comando dh -b</p>
 
 
 **¿Cuál es la ventaja de seguridad y compatibilidad frente al BIOS?**
@@ -90,16 +95,23 @@ set TestSeguridad "Hola UEFI"
 set -v
 ```
 
-📸 *[Insertar capturas]*
+![image](Imagenes_Shell/dmpstore.png)
+<p style="text-align: center;">Captura de pantalla del comando dmpstore</p>
+
+![alt text](Imagenes_Shell/bootOrder.png)
+<p style="text-align: center;">BootOrder del entorno en QEMU</p>
+
+![alt text](Imagenes_Shell/hola_UEFI.png)
+<p style="text-align: center;">BootOrder del entorno en QEMU</p>
 
 **¿Cómo determina el Boot Manager la secuencia de arranque?**
 
 El Boot Manager utiliza las variables `Boot####` junto con `BootOrder`, donde:
 
 * `Boot####` representa entradas individuales de arranque
-* `BootOrder` define el orden en que se intentan
+* `BootOrder` define el orden en que se intentan 
 
-De esta forma, el firmware decide qué dispositivo o aplicación ejecutar primero.
+De esta forma, el firmware decide qué dispositivo o aplicación ejecutar primero. En el caso de que una opción falle en arrancar, se pasa a la siguiente.
 
 ---
 
@@ -113,13 +125,21 @@ pci -b
 drivers -b
 ```
 
-📸 *[Insertar capturas]*
+![alt text](Imagenes_Shell/mmap-b.png)
+<p style="text-align: center;">Captura del comando mmap -b</p>
+
+![alt text](Imagenes_Shell/pci-b.png)
+<p style="text-align: center;">Captura del comando pci-b</p>
+
+![alt text](Imagenes_Shell/drivers-b.png)
+![alt text](Imagenes_Shell/drivers-b2.png)
+<p style="text-align: center;">Capturas del comando drivers-b</p>
 
 **¿Por qué RuntimeServicesCode es un objetivo para malware?**
 
-Estas regiones permanecen accesibles incluso después de que el sistema operativo toma control.
+Porque esas regiones no desaparecen completamente cuando termina el entorno de prearranque. Cuando el sistema operativo llama a ExitBootServices(), la mayoría de los servicios de arranque dejan de estar disponibles, pero los Runtime Services siguen existiendo para funciones como acceso a variables UEFI, reloj y otros servicios básicos.
 
-Esto permite que un atacante (bootkit) ejecute código persistente con alto nivel de privilegio, dificultando su detección y eliminación.
+Entonces, si un atacante logra modificar código o datos ubicados en regiones de runtime, puede intentar mantener presencia incluso después de que el sistema operativo haya arrancado. Por eso son atractivas para bootkits: están en una zona temprana, privilegiada y persistente del proceso de arranque.
 
 ---
 
@@ -145,21 +165,37 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
 }
 ```
 
+**¿Por qué utilizamos SystemTable->ConOut->OutputString en lugar de la función printf de C?**
+
+Porque una aplicación UEFI no corre dentro de Linux ni dentro de Windows. Corre antes del sistema operativo, en un entorno donde no existe la biblioteca estándar de C como normalmente la usamos.
+
+printf depende de un runtime, de una salida estándar, de llamadas al sistema operativo, buffers, terminal, etc. En UEFI todavía no tenemos eso.
+
+Esa función pertenece a los servicios de consola que ofrece el firmware UEFI. Es la manera “nativa” de imprimir texto en pantalla dentro del entorno pre-OS.
+
 ---
 
 ### 4.2 Compilación
 
+
+### Compilar a código objeto
 ```bash
 gcc -I/usr/include/efi -I/usr/include/efi/x86_64 -I/usr/include/efi/protocol \
 -fpic -ffreestanding -fno-stack-protector -fno-strict-aliasing \
 -fshort-wchar -mno-red-zone -maccumulate-outgoing-args -Wall \
 -c -o aplicacion.o aplicacion.c
+```
 
+### Linkear (generar .so intermedio)
+```bash
 ld -shared -Bsymbolic -L/usr/lib -L/usr/lib/efi \
 -T /usr/lib/elf_x86_64_efi.lds \
 /usr/lib/crt0-efi-x86_64.o aplicacion.o \
 -o aplicacion.so -lefi -lgnuefi
+```
 
+### Convertir a ejecutable EFI (PE/COFF)
+```bash
 objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym \
 -j .rel -j .rela -j .rel.* -j .rela.* -j .reloc \
 --target=efi-app-x86_64 aplicacion.so aplicacion.efi
@@ -167,21 +203,7 @@ objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym \
 
 ---
 
-### 4.3 Ejecución
-
-📸 *[Insertar captura ejecutando aplicacion.efi]*
-
----
-
-**¿Por qué no usamos printf?**
-
-UEFI no posee una biblioteca estándar de C como un sistema operativo.
-
-Por lo tanto, se utilizan los servicios provistos por el firmware, accediendo a la consola mediante `SystemTable->ConOut`.
-
----
-
-### 4.4 Análisis con herramientas
+### 4.3 Análisis de Metadatos y Decompilación
 
 Comandos:
 
@@ -190,21 +212,31 @@ file aplicacion.efi
 readelf -h aplicacion.efi
 ```
 
-📸 *[Insertar capturas]*
+![alt text](Imagenes_aplicacion/file_aplicacionEFI.png)
+![alt text](Imagenes_aplicacion/readelf.png)
 
+<p style="text-align: center;">Capturas de los comandos file y readelf al archivo de aplicación creado</p>
+
+*readelf se uso con el archivo .so debido a que el comando no lee archivos .efi*
 ---
 
 ### 4.5 Análisis en Ghidra
 
-📸 *[Insertar captura del pseudocódigo]*
+![alt text](Imagenes_aplicacion/ghidra.png)
+
+La función **efi_main** muestra claramente cómo una aplicación UEFI interactúa con el firmware sin depender de un sistema operativo. En lugar de usar bibliotecas estándar como printf, accede a la consola mediante la `EFI_SYSTEM_TABLE` y el protocolo ConOut. El análisis en Ghidra permite observar cómo las abstracciones del código C se traducen en accesos indirectos a estructuras y punteros de función. Además, el uso del byte `0xCC` permite vincular el ejemplo con conceptos de bajo nivel y análisis de seguridad, aunque en este caso el byte se compara como dato y no se ejecuta como instrucción.
 
 **¿Por qué 0xCC aparece como -52?**
 
-Esto ocurre debido a la interpretación del valor como un entero con signo (signed).
+Porque 0xCC es un byte hexadecimal que vale 204 si lo interpretás como entero sin signo.
 
-El valor hexadecimal `0xCC` corresponde a 204 en decimal sin signo, pero al interpretarse como signed (8 bits), se convierte en -52.
+Pero si Ghidra lo interpreta como un char con signo de 8 bits, el rango posible es: -128 a 127.
 
-Esto es relevante en ciberseguridad ya que puede ocultar patrones de código o instrucciones (como breakpoints) en análisis estático.
+En complemento a dos: 
+- 0xCC = 204 unsigned
+- 0xCC = -52 signed
+
+**Esto importa en ciberseguridad** porque el mismo patrón binario puede verse distinto según el tipo de dato que use el descompilador. Si alguien analiza malware, shellcode, opcodes o buffers, puede confundirse si no distingue entre representación signed y unsigned.
 
 ---
 
