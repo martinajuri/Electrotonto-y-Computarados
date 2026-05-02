@@ -244,14 +244,13 @@ En complemento a dos:
 
 ### 5.1 Preparación del USB
 
+En este paso preparamos el pendrive de arranque utilizando los siguientes comandos:
+
 ```bash
 sudo mount /dev/sdb1 /mnt
 sudo mkdir -p /mnt/EFI/BOOT
 sudo cp aplicacion.efi /mnt/
 ```
-
-📸 *[Insertar capturas]*
-
 ---
 
 ### 5.2 Configuración del firmware
@@ -259,19 +258,22 @@ sudo cp aplicacion.efi /mnt/
 * Secure Boot: Disabled
 * Modo: UEFI Only
 
-📸 *[Insertar capturas BIOS]*
+![alt text](Imagenes_ejecucion/BIOS_Cfg.jpeg)
 
 ---
 
 ### 5.3 Ejecución
+
+Por ultimo ejecutamos en Bare Metal la aplicacion
 
 ```
 FS0:
 ls
 aplicacion.efi
 ```
+Dando como resultado:
 
-📸 *[Insertar captura final]*
+![alt text](Imagenes_ejecucion/Ejecucion.jpeg)
 
 ---
 
