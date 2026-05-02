@@ -251,6 +251,7 @@ sudo mount /dev/sdb1 /mnt
 sudo mkdir -p /mnt/EFI/BOOT
 sudo cp aplicacion.efi /mnt/
 ```
+
 ---
 
 ### 5.2 Configuración del firmware
